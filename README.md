@@ -2,6 +2,15 @@
 # Configuration
 
 
+### Installer laravel/socialite
+
+https://laravel.com/docs/10.x/socialite
+
+```
+composer require laravel/socialite
+```
+
+
 ### composer.json
 
 ```
