@@ -22,17 +22,4 @@ class MbcUserProviderServiceProvider extends ServiceProvider  implements Deferra
             return new MbcUserProviderManager($app);
         });
     }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->loadRoutesFrom(
-            __DIR__ . './../routes/oauth.php'
-        );
-
-    }
 }
