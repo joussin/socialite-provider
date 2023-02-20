@@ -1,6 +1,25 @@
 
 # Configuration
 
+
+### composer.json
+
+```
+"repositories": [
+
+        {
+            "type": "vcs",
+            "url": "https://github.com/joussin/socialite-provider.git"
+        }
+
+    ],
+```
+
+
+```
+"joussin/socialite-provider": "dev-master"
+```
+
 ### config/app.php
 
 ```
