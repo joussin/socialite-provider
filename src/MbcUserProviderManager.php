@@ -1,8 +1,8 @@
 <?php
 
-namespace ApiOAuthSdk;
+namespace MbcUserProvider;
 
-use ApiOAuthSdk\Two\MbcUserProvider;
+use MbcUserProvider\Two\MbcUserProvider;
 use Laravel\Socialite\SocialiteManager;
 
 class MbcUserProviderManager extends SocialiteManager

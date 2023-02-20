@@ -1,8 +1,8 @@
 <?php
 
-namespace ApiOAuthSdk\Two;
+namespace MbcUserProvider\Two;
 
-use ApiOAuthSdk\Entity\JwtToken;
+use MbcUserProvider\Entity\JwtToken;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;

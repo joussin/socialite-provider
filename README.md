@@ -33,7 +33,7 @@ composer require laravel/socialite
 
 ```
 'providers' => [
-        \ApiOAuthSdk\ApiOAuthSdkServiceProvider::class
+        \MbcUserProvider\MbcUserProviderServiceProvider::class
     ],
 ```
 
@@ -68,26 +68,4 @@ php artisan migrate --path=/database/migrations/2014_10_12_000000_create_users_t
 ],
 ```
 
-### routes/web.php
-
-```
-
-
-Route::middleware('web')->get('/oauth/redirect', function () {
-    return \Laravel\Socialite\Facades\Socialite::driver('mbc')->redirect();
-})->name('oauth.login');
-
-Route::middleware('web')->get('/oauth/login/callback', function () {
-
-    $user = Laravel\Socialite\Facades\Socialite::driver('mbc')->user();
-
-    $userLaravel = Laravel\Socialite\Facades\Socialite::driver('mbc')->mapObjectToModel($user);
-    
-    \Illuminate\Support\Facades\Auth::login($userLaravel);
-
-    return redirect()->route('backoffice.home');
-
-})->name('oauth.login.callback');
-
-
-```
+### src/routes/oauth.php -> routes/web.php

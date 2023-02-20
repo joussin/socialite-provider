@@ -1,6 +1,6 @@
 <?php
 
-namespace ApiOAuthSdk\Entity;
+namespace MbcUserProvider\Entity;
 
 use Lcobucci\JWT\Token as TokenInterface;
 

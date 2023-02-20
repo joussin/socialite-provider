@@ -1,13 +1,13 @@
 <?php
 
-namespace ApiOAuthSdk;
+namespace MbcUserProvider;
 
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Contracts\Factory;
 
 
-class ApiOAuthSdkServiceProvider extends ServiceProvider  implements DeferrableProvider
+class MbcUserProviderServiceProvider extends ServiceProvider  implements DeferrableProvider
 {
 
     /**
