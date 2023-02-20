@@ -33,7 +33,7 @@ composer require laravel/socialite
 
 ```
 'providers' => [
-        \ApiOAuthSdk\Laravel\ApiOAuthSdkServiceProvider::class
+        \ApiOAuthSdk\ApiOAuthSdkServiceProvider::class
     ],
 ```
 
@@ -52,6 +52,12 @@ GOOGLE_URL_CALLBACK=http://127.0.0.1:8099/auth/callback
 ```
 
 
+### database
+
+
+php artisan migrate --path=/database/migrations/2014_10_12_000000_create_users_table.php
+
+
 ### config/services.php
 
 ```
@@ -65,23 +71,23 @@ GOOGLE_URL_CALLBACK=http://127.0.0.1:8099/auth/callback
 ### routes/web.php
 
 ```
+
+
 Route::middleware('web')->get('/oauth/redirect', function () {
     return \Laravel\Socialite\Facades\Socialite::driver('mbc')->redirect();
-});
+})->name('oauth.login');
 
 Route::middleware('web')->get('/oauth/login/callback', function () {
 
     $user = Laravel\Socialite\Facades\Socialite::driver('mbc')->user();
 
-    $user = \App\Models\User::updateOrCreate([
-        'id' => $user->id,
-    ], [
-        'name'  => $user->name,
-        'email' => $user->email
-    ]);
+    $userLaravel = Laravel\Socialite\Facades\Socialite::driver('mbc')->mapObjectToModel($user);
     
-    \Illuminate\Support\Facades\Auth::login($user);
+    \Illuminate\Support\Facades\Auth::login($userLaravel);
 
-    return redirect('/dashboard');
-});
+    return redirect()->route('backoffice.home');
+
+})->name('oauth.login.callback');
+
+
 ```

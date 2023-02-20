@@ -1,13 +1,20 @@
 <?php
 
-namespace ApiOAuthSdk\Services;
+namespace ApiOAuthSdk\Two;
 
+use ApiOAuthSdk\Entity\JwtToken;
 use GuzzleHttp\RequestOptions;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
+use Lcobucci\JWT\Encoding\CannotDecodeContent;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\InvalidTokenStructure;
+use Lcobucci\JWT\Token\Parser;
+use Lcobucci\JWT\Token\UnsupportedHeaderFound;
+
 
 class MbcUserProvider extends AbstractProvider implements ProviderInterface
 {
@@ -125,15 +132,51 @@ class MbcUserProvider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         // Deprecated: Fields added to keep backwards compatibility in 4.0. These will be removed in 5.0
-        $user['id'] = Arr::get($user, 'id');
-        $user['name'] = Arr::get($user, 'name');
-        $user['email'] = Arr::get($user, 'email');
-//        $user['verified_email'] = Arr::get($user, 'email_verified');
+//        $user['id'] = Arr::get($user, 'id');
 
         return (new User())->setRaw($user)->map([
             'id'    => Arr::get($user, 'id'),
             'name'  => Arr::get($user, 'name'),
             'email' => Arr::get($user, 'email'),
+            'email_verified_at' => Arr::get($user, 'email_verified_at'),
         ]);
+    }
+
+    public function mapObjectToModel(\Laravel\Socialite\Contracts\User $user) : \App\Models\User
+    {
+        $userLaravel = \App\Models\User::updateOrCreate([
+            'id' => $user->id,
+        ], [
+            'name'  => $user->name,
+            'email' => $user->email,
+            'email_verified_at' => $user->email_verified_at,
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        ]);
+
+
+//    $userLaravel->accessToken = $user->token;
+
+        return $userLaravel;
+    }
+
+
+    public function parseToken(string $access_token): ?JwtToken
+    {
+        $parser = new Parser(new JoseEncoder());
+
+        try {
+            $token = $parser->parse($access_token);
+
+            $access_token_id = $token->claims()->get('jti');
+            $client_id = $token->claims()->get('aud');
+            $user_id = $token->claims()->get('sub') ?? null;
+            $scopes = $token->claims()->get('scopes') ?? null;
+
+            return new JwtToken($access_token, $token, $access_token_id, $client_id[0], $user_id, $scopes);
+
+        } catch (CannotDecodeContent|InvalidTokenStructure|UnsupportedHeaderFound $e) {
+            Log::info($e->getMessage());
+        }
+        return null;
     }
 }
