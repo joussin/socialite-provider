@@ -1,76 +1,59 @@
 
---- ---------------------------------------------------------------------------
---- ---------------------------------------------------------------------------
---- ---------------------------------------------------------------------------
-## Configuration
+# Configuration
 
-config/app.php
+### config/app.php
 
+```
 'providers' => [
-        /*
-         * Package Service Providers...
-         */
-\ApiOAuthSdk\Laravel\OAuth2ServiceProvider::class
-  
+        \ApiOAuthSdk\Laravel\OAuth2ServiceProvider::class
     ],
+```
 
-.env
+### .env
 
+```
+#avec notre api oauth2
 MBC_OAUTH_CLIENT_ID=5#5 (sans secret)
 MBC_OAUTH_CLIENT_SECRET=QubbfUEBHAvrybtHzr010oWtGUpYPQze0i6Sann9
 MBC_OAUTH_URL_CALLBACK=http://127.0.0.1:8099/oauth/login/callback
 
-config/services.php
-
-    'mbc' => [
-        'client_id' => env('MBC_OAUTH_CLIENT_ID'),
-        'client_secret' => env('MBC_OAUTH_CLIENT_SECRET'),
-        'redirect' => env('MBC_OAUTH_URL_CALLBACK')
-    ],
+#avec google
+GOOGLE_CLIENT_ID=466719391211-bcf6sv3glah2fk2c51c1o05call54d82.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+GOOGLE_URL_CALLBACK=http://127.0.0.1:8099/auth/callback
+```
 
 
-    'google' => [
-    'client_id' => env('GOOGLE_CLIENT_ID'),
-    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-    'redirect' => env('GOOGLE_URL_CALLBACK')
-    ],
+### config/services.php
 
+```
+'mbc' => [
+    'client_id' => env('MBC_OAUTH_CLIENT_ID'),
+    'client_secret' => env('MBC_OAUTH_CLIENT_SECRET'),
+    'redirect' => env('MBC_OAUTH_URL_CALLBACK')
+],
+```
 
+### routes/web.php
 
-use Laravel\Socialite\Facades\Socialite;
+```
+Route::middleware('web')->get('/oauth/redirect', function () {
+    return \Laravel\Socialite\Facades\Socialite::driver('mbc')->redirect();
+});
 
-try {
+Route::middleware('web')->get('/oauth/login/callback', function () {
 
-    Route::group(['middleware' => ['web']], function () {
-        // your routes here
+    $user = Laravel\Socialite\Facades\Socialite::driver('mbc')->user();
 
-        Route::get('/oauth/redirect', function () {
+    $user = \App\Models\User::updateOrCreate([
+        'id' => $user->id,
+    ], [
+        'name'  => $user->name,
+        'email' => $user->email
+    ]);
+    
+    \Illuminate\Support\Facades\Auth::login($user);
 
-
-            return Socialite::driver('mbc')->redirect();
-        });
-
-        Route::get('/oauth/login/callback', function () {
-
-
-            $user = Socialite::driver('mbc')->user();
-
-            $user = \App\Models\User::updateOrCreate([
-                'github_id' => $user->id,
-            ], [
-                'name' => $user->name,
-                'email' => $user->email
-            ]);
-
-
-
-            \Illuminate\Support\Facades\Auth::login($user);
-
-            return redirect('/dashboard');
-
-        });
-    });
-
-} catch (\Exception $exception) {
-die($exception->getMessage());
-}
+    return redirect('/dashboard');
+});
+```
