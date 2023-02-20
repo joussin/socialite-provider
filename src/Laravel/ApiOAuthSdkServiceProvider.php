@@ -2,17 +2,17 @@
 
 namespace ApiOAuthSdk\Laravel;
 
-use ApiOAuthSdk\Services\MbcSocialiteManager;
+use ApiOAuthSdk\Services\MbcUserProviderManager;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use ApiOAuthSdk\Services\OAuth2ApiClient;
 use ApiOAuthSdk\Services\OAuth2ApiClientInterface;
-use ApiOAuthSdk\Services\OAuth2TokenService;
+use ApiOAuthSdk\Services\JwtTokenService;
 use ApiOAuthSdk\Services\OAuth2TokenServiceInterface;
 use Laravel\Socialite\Contracts\Factory;
 
 
-class OAuth2ServiceProvider extends ServiceProvider  implements DeferrableProvider
+class ApiOAuthSdkServiceProvider extends ServiceProvider  implements DeferrableProvider
 {
 
     /**
@@ -25,20 +25,10 @@ class OAuth2ServiceProvider extends ServiceProvider  implements DeferrableProvid
     {
 
         $this->app->singleton(Factory::class, function ($app) {
-            return new MbcSocialiteManager($app);
+            return new MbcUserProviderManager($app);
         });
 
-        $this->app->singleton(OAuth2TokenServiceInterface::class, OAuth2TokenService::class);
-        $this->app->singleton(OAuth2ApiClientInterface::class, function()
-        {
-            return new OAuth2ApiClient(
-                new \GuzzleHttp\Client([
-                    'base_uri' => 'http://127.0.0.1:9999'
-                ]),
-                'http://127.0.0.1:9999',
-                env('MBC_OAUTH_URL_CALLBACK')
-            );
-        });
+        $this->app->singleton(JwtTokenService::class);
 
 
     }

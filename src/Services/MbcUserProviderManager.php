@@ -4,7 +4,7 @@ namespace ApiOAuthSdk\Services;
 
 use Laravel\Socialite\SocialiteManager;
 
-class MbcSocialiteManager extends SocialiteManager
+class MbcUserProviderManager extends SocialiteManager
 {
 
     /**
@@ -17,7 +17,7 @@ class MbcSocialiteManager extends SocialiteManager
         $config = $this->config->get('services.mbc');
 
         return $this->buildProvider(
-            MbcSocialiteProvider::class, $config
+            MbcUserProvider::class, $config
         );
     }
 }

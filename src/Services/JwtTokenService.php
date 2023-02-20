@@ -10,7 +10,7 @@ use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Token\UnsupportedHeaderFound;
 use ApiOAuthSdk\Entity\JwtToken;
 
-class OAuth2TokenService implements OAuth2TokenServiceInterface
+class JwtTokenService
 {
 
     public function parseToken(string $access_token): ?JwtToken

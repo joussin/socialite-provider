@@ -4,21 +4,13 @@ namespace ApiOAuthSdk\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use ApiOAuthSdk\Services\OAuth2ApiClientInterface;
-use ApiOAuthSdk\Services\OAuth2TokenServiceInterface;
 
 
 class OAuth2Controller extends Controller
 {
 
-    protected $auth2TokenService;
-
-    protected $auth2ApiClient;
-
-    public function __construct(OAuth2TokenServiceInterface $auth2TokenService, OAuth2ApiClientInterface $auth2ApiClient)
+    public function __construct()
     {
-        $this->auth2TokenService = $auth2TokenService;
-        $this->auth2ApiClient = $auth2ApiClient;
     }
 
     public function login(Request $request)

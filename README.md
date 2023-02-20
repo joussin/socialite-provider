@@ -33,7 +33,7 @@ composer require laravel/socialite
 
 ```
 'providers' => [
-        \ApiOAuthSdk\Laravel\OAuth2ServiceProvider::class
+        \ApiOAuthSdk\Laravel\ApiOAuthSdkServiceProvider::class
     ],
 ```
 
