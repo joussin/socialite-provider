@@ -4,7 +4,15 @@
 --- ---------------------------------------------------------------------------
 ## Configuration
 
+config/app.php
 
+'providers' => [
+        /*
+         * Package Service Providers...
+         */
+\ApiOAuthSdk\Laravel\OAuth2ServiceProvider::class
+  
+    ],
 
 .env
 
@@ -21,12 +29,6 @@ config/services.php
     ],
 
 
-    'github' => [
-        'client_id' => env('GITHUB_CLIENT_ID'),
-        'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect' => env('GITHUB_URL_CALLBACK')
-    ],
-    
     'google' => [
     'client_id' => env('GOOGLE_CLIENT_ID'),
     'client_secret' => env('GOOGLE_CLIENT_SECRET'),
@@ -102,3 +104,4 @@ try {
 } catch (\Exception $exception) {
 die($exception->getMessage());
 }
+
