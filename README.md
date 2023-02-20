@@ -55,48 +55,18 @@ try {
 
             $user = Socialite::driver('mbc')->user();
 
-
-            dd(
-                $user
-            );
-
-            // OAuth 2.0 providers...
-
-            // $user = Socialite::driver('github')->userFromToken($token);
-
-            $token = $user->token;
-            $refreshToken = $user->refreshToken;
-            $expiresIn = $user->expiresIn;
-
-            // OAuth 1.0 providers...
-            $token = $user->token;
-            $tokenSecret = $user->tokenSecret;
-
-            // All providers...
-            $user->getId();
-            $user->getNickname();
-            $user->getName();
-            $user->getEmail();
-            $user->getAvatar();
-
-
-            /*
-            $githubUser = Socialite::driver('github')->user();
-
             $user = \App\Models\User::updateOrCreate([
-                'github_id' => $githubUser->id,
+                'github_id' => $user->id,
             ], [
-                'name' => $githubUser->name,
-                'email' => $githubUser->email,
-                'github_token' => $githubUser->token,
-                'github_refresh_token' => $githubUser->refreshToken,
+                'name' => $user->name,
+                'email' => $user->email
             ]);
+
+
 
             \Illuminate\Support\Facades\Auth::login($user);
 
             return redirect('/dashboard');
-            */
-
 
         });
     });
@@ -104,4 +74,3 @@ try {
 } catch (\Exception $exception) {
 die($exception->getMessage());
 }
-
