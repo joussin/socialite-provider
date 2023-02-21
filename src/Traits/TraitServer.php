@@ -39,8 +39,8 @@ trait TraitServer
     {
         $fields = [
             'grant_type'    => 'client_credentials',
-            'client_id'     => $this->clientId,
-            'client_secret' => $this->clientSecret,
+            'client_id'     => env('MBC_SERVER_SIDE_API_OAUTH_CLIENT_ID'), //$this->clientId,
+            'client_secret' => env('MBC_SERVER_SIDE_API_OAUTH_CLIENT_SECRET'), //$this->clientSecret,
             'scopes'        => '' // route:create route:delete
         ];
 
