@@ -41,6 +41,7 @@
 
             ],
             "aliases": {
+                "UserProviderFacade": "MbcUserProvider\\Facades\\UserProviderFacade"
             }
         }
     },

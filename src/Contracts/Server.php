@@ -2,8 +2,6 @@
 
 namespace MbcUserProvider\Contracts;
 
-use MbcUserProvider\Entity\JwtToken;
-
 interface Server
 {
 

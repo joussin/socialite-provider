@@ -1,6 +1,6 @@
 <?php
 
-namespace MbcUserProvider\Two;
+namespace MbcUserProvider\Utils;
 
 use Illuminate\Support\Facades\Log;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;
@@ -8,9 +8,10 @@ use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Token\UnsupportedHeaderFound;
-use MbcUserProvider\Entity\JwtToken;
+use MbcUserProvider\Utils\Entity\JwtToken;
 
-class ProviderExtension
+
+class UserProviderExtension
 {
 
     public static function parseToken(string $access_token): ?JwtToken

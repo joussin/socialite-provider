@@ -1,6 +1,6 @@
 <?php
 
-namespace MbcUserProvider\Entity;
+namespace MbcUserProvider\Utils\Entity;
 
 use Lcobucci\JWT\Token as TokenInterface;
 
