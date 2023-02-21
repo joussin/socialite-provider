@@ -81,13 +81,13 @@ php artisan migrate --path=/database/migrations/2014_10_12_000000_create_users_t
     'mbc' => [
     
         'host' => env('MBC_OAUTH_API_HOST'),
-        'server_client_id' => env('MBC_SERVER_SIDE_API_OAUTH_CLIENT_ID'),
-        'server_client_secret' => env('MBC_SERVER_SIDE_API_OAUTH_CLIENT_SECRET'),
-        
-        
         'client_id' => env('MBC_LOGIN_OAUTH_CLIENT_ID'),
         'client_secret' => env('MBC_LOGIN_OAUTH_CLIENT_SECRET'),
         'redirect' => env('MBC_LOGIN_OAUTH_URL_CALLBACK'),
+        
+        
+        'server_client_id' => env('MBC_SERVER_SIDE_API_OAUTH_CLIENT_ID'),
+        'server_client_secret' => env('MBC_SERVER_SIDE_API_OAUTH_CLIENT_SECRET'),
     ],
 
     'google' => [
@@ -113,8 +113,8 @@ Route::middleware('web')->get('/oauth/login/callback', function () {
 
     $user = Laravel\Socialite\Facades\Socialite::driver( env('SOCIALITE_DRIVER') )->user();
 
-    $userLaravel = \MbcUserProvider\Two\ProviderExtension::mapObjectToModel($user);
-    $login = \MbcUserProvider\Two\ProviderExtension::login($userLaravel);
+        $userLaravel = \MbcUserProvider\Utils\UserProviderExtension::mapObjectToModel($user);
+    $login = \MbcUserProvider\Utils\UserProviderExtension::login($userLaravel);
 
     return redirect()->route('backoffice.home');
 

@@ -12,8 +12,8 @@ trait TraitServer
     {
         $token = $this->serverAccessToken();
 
-        $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            RequestOptions::FORM_PARAMS => $params,
+        $response = $this->getHttpClient()->get($this->getTokenUrl(), [
+//            RequestOptions::FORM_PARAMS => $params,
             RequestOptions::HEADERS => [
                 'Accept'        => 'application/json',
                 'Authorization' => 'Bearer ' . $token,
@@ -34,15 +34,15 @@ trait TraitServer
             'grant_type'    => 'client_credentials',
             'client_id'     => $this->clientId,
             'client_secret' => $this->clientSecret,
-            'scopes'        => ''
+            'scopes'        => '' // route:create route:delete
         ];
 
 
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
             RequestOptions::FORM_PARAMS => $fields,
-            RequestOptions::HEADERS => [
-                'Accept'        => 'application/json'
-            ],
+//            RequestOptions::HEADERS => [
+//                'Accept'        => 'application/json'
+//            ],
         ]);
 
         return json_decode($response->getBody(), true)['access_token'];
