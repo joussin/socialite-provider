@@ -2,6 +2,7 @@
 
 namespace MbcUserProvider\Traits;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 
 
@@ -19,7 +20,11 @@ trait TraitServer
 
         $method = in_array($method, $methods) ? strtolower($method) : 'get';
 
-        $response = $this->getHttpClient()->$method($path, [
+        $client = new Client([
+            'base_uri' => env('MBC_SERVER_SIDE_API_URL')
+        ]);
+
+        $response = $client->$method($path, [
             RequestOptions::HEADERS => [
                 'Accept'        => 'application/json',
                 'Authorization' => 'Bearer ' . $token,

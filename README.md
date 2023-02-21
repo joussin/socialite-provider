@@ -45,6 +45,7 @@ composer require laravel/socialite
 SOCIALITE_DRIVER=mbc|google
 MBC_OAUTH_API_HOST=http://127.0.0.1:9999
 
+MBC_SERVER_SIDE_API_URL=http://127.0.0.1:8000
 MBC_SERVER_SIDE_API_OAUTH_CLIENT_ID=5
 MBC_SERVER_SIDE_API_OAUTH_CLIENT_SECRET=QubbfUEBHAvrybtHzr010oWtGUpYPQze0i6Sann9
 
@@ -86,6 +87,7 @@ php artisan migrate --path=/database/migrations/2014_10_12_000000_create_users_t
         'redirect' => env('MBC_LOGIN_OAUTH_URL_CALLBACK'),
         
         
+        'server_host' => env('MBC_SERVER_SIDE_API_URL'),
         'server_client_id' => env('MBC_SERVER_SIDE_API_OAUTH_CLIENT_ID'),
         'server_client_secret' => env('MBC_SERVER_SIDE_API_OAUTH_CLIENT_SECRET'),
     ],
