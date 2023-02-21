@@ -120,3 +120,13 @@ Route::middleware('web')->get('/oauth/login/callback', function () {
 
 })->name('login.callback');
 
+
+
+Route::middleware('web')->get('/oauth/route/all', function () {
+
+    $routes = Laravel\Socialite\Facades\Socialite::driver( 'mbc' )->server();
+
+    return response()->json($routes, 200);
+
+})->name('server.test');
+

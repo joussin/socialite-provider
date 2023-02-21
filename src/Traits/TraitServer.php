@@ -8,16 +8,23 @@ use GuzzleHttp\RequestOptions;
 trait TraitServer
 {
 
-    public function server(array $params = []) : ?array
+    public function server(string $path, string $method = 'GET', array $params = []) : ?array
     {
+        if(empty($path))
+            return null;
+
         $token = $this->serverAccessToken();
 
-        $response = $this->getHttpClient()->get($this->getTokenUrl(), [
-//            RequestOptions::FORM_PARAMS => $params,
+        $methods = ['GET', 'POST', 'PUT', 'DELETE'];
+
+        $method = in_array($method, $methods) ? strtolower($method) : 'get';
+
+        $response = $this->getHttpClient()->$method($path, [
             RequestOptions::HEADERS => [
                 'Accept'        => 'application/json',
                 'Authorization' => 'Bearer ' . $token,
             ],
+            //            RequestOptions::FORM_PARAMS => $params,
         ]);
 
         return json_decode($response->getBody(), true);
