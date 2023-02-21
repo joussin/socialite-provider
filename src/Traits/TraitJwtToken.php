@@ -1,37 +1,17 @@
 <?php
 
-namespace MbcUserProvider\Two;
+namespace MbcUserProvider\Traits;
 
-use MbcUserProvider\Entity\JwtToken;
 use Illuminate\Support\Facades\Log;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Token\UnsupportedHeaderFound;
+use MbcUserProvider\Entity\JwtToken;
 
-
-class CommonUserProvider
+trait TraitJwtToken
 {
-
-    public function mapObjectToModel(\Laravel\Socialite\Contracts\User $user) : \App\Models\User
-    {
-        $userLaravel = \App\Models\User::updateOrCreate([
-            'email' => $user->email,
-        ], [
-            'name'  => $user->name,
-            'email' => $user->email,
-            'email_verified_at' => $user->email_verified_at,
-//            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'password' => uniqid(), // password
-        ]);
-
-
-//    $userLaravel->accessToken = $user->token;
-
-        return $userLaravel;
-    }
-
 
     public function parseToken(string $access_token): ?JwtToken
     {

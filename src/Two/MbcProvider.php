@@ -2,22 +2,29 @@
 
 namespace MbcUserProvider\Two;
 
-use MbcUserProvider\Entity\JwtToken;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
-use Lcobucci\JWT\Encoding\CannotDecodeContent;
-use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Token\InvalidTokenStructure;
-use Lcobucci\JWT\Token\Parser;
-use Lcobucci\JWT\Token\UnsupportedHeaderFound;
+use MbcUserProvider\Contracts\JwtToken as MbcJwtTokenInterface;
+use MbcUserProvider\Contracts\Server as MbcServerInterface;
+use MbcUserProvider\Contracts\User as MbcUserInterface;
+use MbcUserProvider\Traits\TraitJwtToken;
+use MbcUserProvider\Traits\TraitServer;
+use MbcUserProvider\Traits\TraitUser;
 
 
-class MbcUserProvider extends AbstractProvider implements ProviderInterface
+class MbcProvider extends AbstractProvider implements ProviderInterface, MbcUserInterface, MbcServerInterface,  MbcJwtTokenInterface
 {
+
+    use TraitUser;
+
+    use TraitServer;
+
+    use TraitJwtToken;
+
     /**
      * The separating character for the requested scopes.
      *
@@ -40,33 +47,29 @@ class MbcUserProvider extends AbstractProvider implements ProviderInterface
     protected $usesPKCE = true;
 
 
-    public const API_URL = 'http://127.0.0.1:9999';
+    // $guzzle == base $guzzle config : ['base_uri' => 'http://0.0.0.0/test']
 
-    public const CODE_VERIFIER = 'P6oelECwFb5dACCIeafOu6DO2gfBMsOupeap1CiWRg3U3n9PE2tzrsY93xsXonyGkKFYqLexiKVdQ8wPsaRsdrKloR7VvxJ9sIKDEsKJWioeex7kB8NQjucObr2mPjs2';
-//   request()->session()->put('code_verifier', $this->code_verifier);
+//    public function __construct(Request $request, $clientId, $clientSecret, $redirectUrl, $guzzle = [])
+//    {
+//        parent::__construct($request, $clientId, $clientSecret, $redirectUrl, $guzzle);
+//    }
 
     /**
      * {@inheritdoc}
      */
     protected function getAuthUrl($state)
     {
-        return $this->getLoginUrl();
-    }
-
-
-    public function getLoginUrl(): string
-    {
         $scopes = 'route:read route:create';
 
         $state = \Illuminate\Support\Str::random(40);
 
         $codeChallenge = strtr(rtrim(
-            base64_encode(hash('sha256', self::CODE_VERIFIER, true))
+            base64_encode(hash('sha256', $this->getCodeVerifier(), true))
             , '='), '+/', '-_');
 
         $data = [
             'client_id'             => 5,
-            'redirect_uri'          => env('MBC_OAUTH_URL_CALLBACK'),
+            'redirect_uri'          => env('MBC_LOGIN_OAUTH_URL_CALLBACK'),
             'response_type'         => 'code',
             'scope'                 => $scopes,
             'state'                 => $state,
@@ -77,43 +80,24 @@ class MbcUserProvider extends AbstractProvider implements ProviderInterface
 
         $query = http_build_query($data);
 
-        return self::API_URL . '/oauth/authorize?' . $query;
+        return $this->getHost() . '/oauth/authorize?' . $query;
     }
-
 
     /**
      * {@inheritdoc}
      */
     protected function getTokenUrl()
     {
-        return self::API_URL . '/oauth/token';
+        return $this->getHost() . '/oauth/token';
     }
 
-    protected function getTokenFields($code)
-    {
-        $fields = [
-            'grant_type'    => 'authorization_code',
-            'client_id'     => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'code'          => $code,
-            'redirect_uri'  => $this->redirectUrl,
-        ];
-
-        if ($this->usesPKCE()) {
-//            $fields['code_verifier'] = $this->request->session()->pull('code_verifier');
-
-            $fields['code_verifier'] = self::CODE_VERIFIER;
-        }
-
-        return $fields;
-    }
 
     /**
      * {@inheritdoc}
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get(self::API_URL . '/oauth/userinfo', [
+        $response = $this->getHttpClient()->get($this->getHost() . '/oauth/userinfo', [
             RequestOptions::QUERY   => [
                 'prettyPrint' => 'false',
             ],
@@ -141,5 +125,6 @@ class MbcUserProvider extends AbstractProvider implements ProviderInterface
             'email_verified_at' => Arr::get($user, 'email_verified_at'),
         ]);
     }
+
 
 }
