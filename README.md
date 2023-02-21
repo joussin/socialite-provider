@@ -94,7 +94,7 @@ php artisan migrate --path=/database/migrations/2014_10_12_000000_create_users_t
     
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('MBC_OAUTH_URL_CALLBACK')
+        'redirect' => env('GOOGLE_URL_CALLBACK')
     ],
 
 
@@ -106,18 +106,17 @@ php artisan migrate --path=/database/migrations/2014_10_12_000000_create_users_t
 
 
 Route::middleware('web')->get('/oauth/redirect', function () {
-return \Laravel\Socialite\Facades\Socialite::driver( env('SOCIALITE_DRIVER') )->redirect();
-})->name('oauth.login');
+    return \Laravel\Socialite\Facades\Socialite::driver( env('SOCIALITE_DRIVER') )->redirect();
+})->name('login');
 
 Route::middleware('web')->get('/oauth/login/callback', function () {
 
     $user = Laravel\Socialite\Facades\Socialite::driver( env('SOCIALITE_DRIVER') )->user();
 
-    $userLaravel = Laravel\Socialite\Facades\Socialite::driver( env('SOCIALITE_DRIVER') )->mapObjectToModel($user);
-
-    \Illuminate\Support\Facades\Auth::login($userLaravel);
+    $userLaravel = \MbcUserProvider\Two\ProviderExtension::mapObjectToModel($user);
+    $login = \MbcUserProvider\Two\ProviderExtension::login($userLaravel);
 
     return redirect()->route('backoffice.home');
 
-})->name('oauth.login.callback');
+})->name('login.callback');
 

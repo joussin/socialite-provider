@@ -14,8 +14,6 @@ interface User
     public function setCodeVerifier(string $code_verifier);
 
 
-    public function mapObjectToModel(\Laravel\Socialite\Contracts\User $user) : \App\Models\User;
-
 
 
     /**

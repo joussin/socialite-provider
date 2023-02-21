@@ -89,17 +89,5 @@ trait TraitUser
     }
 
 
-    public function mapObjectToModel(\Laravel\Socialite\Contracts\User $user) : \App\Models\User
-    {
-        $userLaravel = \App\Models\User::updateOrCreate([
-            'email' => $user->email,
-        ], [
-            'name'  => $user->name,
-            'email' => $user->email,
-            'email_verified_at' => $user->email_verified_at,
-            'password' => uniqid(), // password | ou '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-        ]);
 
-        return $userLaravel;
-    }
 }

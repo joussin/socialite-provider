@@ -8,22 +8,17 @@ use Illuminate\Support\Arr;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
-use MbcUserProvider\Contracts\JwtToken as MbcJwtTokenInterface;
 use MbcUserProvider\Contracts\Server as MbcServerInterface;
 use MbcUserProvider\Contracts\User as MbcUserInterface;
-use MbcUserProvider\Traits\TraitJwtToken;
 use MbcUserProvider\Traits\TraitServer;
 use MbcUserProvider\Traits\TraitUser;
 
 
-class MbcProvider extends AbstractProvider implements ProviderInterface, MbcUserInterface, MbcServerInterface,  MbcJwtTokenInterface
+class MbcProvider extends AbstractProvider implements ProviderInterface, MbcUserInterface, MbcServerInterface
 {
-
     use TraitUser;
 
     use TraitServer;
-
-    use TraitJwtToken;
 
     /**
      * The separating character for the requested scopes.
